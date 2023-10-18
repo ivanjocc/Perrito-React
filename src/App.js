@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; // Cambio aquí: Importa 'Routes' además de 'Route'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import api, { setAuthToken } from './services/api';
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
