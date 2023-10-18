@@ -1,24 +1,45 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; // Cambio aquí: Importa 'Routes' además de 'Route'
+import api, { setAuthToken } from './services/api';
+import Login from './components/Auth/Login';
+import Register from './components/Auth/Register';
+import UserProfile from './components/Auth/UserProfile';
+import ManagePoints from './components/Points/ManagePoints';
+import Users from './components/Users/Users';
 
 function App() {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const storedToken = localStorage.getItem('authToken');
+    if (storedToken) {
+      setAuthToken(storedToken);
+      api
+        .apiGetUser()
+        .then((response) => {
+          setUser(response.data);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div className="App">
+        <h1>Let's Play App</h1>
+        {user && <p>Welcome, {user.username}!</p>}
+        <Routes>
+          <Route path="/login" element={<Login />} /> 
+          <Route path="/register" element={<Register />} /> 
+          <Route path="/profile" element={<UserProfile />} /> 
+          <Route path="/manage-points" element={<ManagePoints />} /> 
+          <Route path="/users" element={<Users />} /> 
+          <Route path="/" element={<p>Welcome to the Let's Play App! Please log in or register.</p>} /> 
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
